@@ -49,9 +49,9 @@ struct HeatMapCard: View {
             PlayerCarousel(players: players)
                         
             HStack(spacing: 8) {
-                Circle().fill(Color.gray).frame(width: 8, height: 8)
-                Circle().fill(Color.pink).frame(width: 8, height: 8)
-                Circle().fill(Color.gray).frame(width: 8, height: 8)
+                Circle().fill(Color.pinkOpaque).frame(width: 8, height: 8)
+                Circle().fill(Color.accentColor).frame(width: 8, height: 8)
+                Circle().fill(Color.pinkOpaque).frame(width: 8, height: 8)
             }
         }
         .padding()
@@ -66,27 +66,16 @@ struct HeatMapCard: View {
 
 
 struct PlayerCarousel: View {
-    var players: [Player]
-    
+    @State private var selectedPlayer: Player = TeamPlayers.liverpoolPlayers[0] // Giocatore selezionato iniziale
+    var players: [Player] // Lista dei giocatori disponibili
+
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                ForEach(players) { player in
-                    HStack(spacing: 15) {
-                        Image(player.image)
-                            .resizable()
-                            .frame(width: 30, height: 30)
-                            .clipShape(Circle())
-                        Text(player.name)
-                            .font(.caption)
-                            .fontWeight(.bold)
-                        Text(player.role)
-                            .font(.caption2)
-                            .foregroundColor(.gray)
+        VStack {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(players) { player in
+                        PlayerSelectionView(selectedPlayer: $selectedPlayer, player: player)
                     }
-                    .padding()
-                    .background(Color.gray.opacity(0.2))
-                    .cornerRadius(10)
                 }
             }
         }

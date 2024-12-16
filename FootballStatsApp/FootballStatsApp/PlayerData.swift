@@ -13,6 +13,7 @@ struct Player: Identifiable {
     let name: String
     let role: String
     let image: String
+    var relatedModel: String = "Experience"
 }
 
 struct TeamPlayers {
@@ -25,7 +26,7 @@ struct TeamPlayers {
         Player(name: "Fabinho", role: "CDM", image: "salah"),
         Player(name: "Jordan Henderson", role: "CM", image: "salah"),
         Player(name: "Thiago Alcântara", role: "CM", image: "salah"),
-        Player(name: "Mohamed Salah", role: "RW", image: "salah"),
+        Player(name: "Mohamed Salah", role: "RW", image: "salah", relatedModel: "toy_drummer_idle"),
         Player(name: "Sadio Mané", role: "LW", image: "salah"),
         Player(name: "Roberto Firmino", role: "ST", image: "salah")
     ]
@@ -44,3 +45,4 @@ struct TeamPlayers {
         Player(name: "Harry Kane", role: "ST", image: "salah")
     ]
 }
+

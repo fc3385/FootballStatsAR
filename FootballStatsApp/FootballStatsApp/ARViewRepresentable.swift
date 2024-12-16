@@ -12,15 +12,30 @@ import ARKit
 struct ARViewRepresentable: UIViewRepresentable {
     func makeUIView(context: Context) -> ARView {
         let arView = ARView(frame: .zero)
-        
+        arView.setupARSession()
 
-        let configuration = ARWorldTrackingConfiguration()
-        configuration.planeDetection = [.horizontal]
-        arView.session.run(configuration)
-        
+        // Caricamento del modello generico "Experience"
+        if let model = try? Entity.load(named: "Experience") {
+            let anchor = AnchorEntity(world: [0, 0, -1]) // Posizionamento del modello
+            anchor.addChild(model)
+            arView.scene.anchors.append(anchor)
+        } else {
+            print("Errore: Impossibile caricare il modello 'Experience'")
+        }
+
         return arView
     }
-    
+
     func updateUIView(_ uiView: ARView, context: Context) {
+        // Nessun aggiornamento dinamico richiesto
+    }
+}
+
+extension ARView {
+    func setupARSession() {
+        // Configurazione dell'AR session (es. rilevamento di piani o tracking)
+        let configuration = ARWorldTrackingConfiguration()
+        configuration.planeDetection = [.horizontal]
+        session.run(configuration)
     }
 }
