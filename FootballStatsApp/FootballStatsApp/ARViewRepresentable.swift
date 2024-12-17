@@ -15,7 +15,7 @@ struct ARViewRepresentable: UIViewRepresentable {
         arView.setupARSession()
 
         // Caricamento del modello generico "Experience"
-        if let model = try? Entity.load(named: "Experience") {
+        if let model = try? Entity.load(named: "Scene") {
             let anchor = AnchorEntity(world: [0, 0, -1]) // Posizionamento del modello
             anchor.addChild(model)
             arView.scene.anchors.append(anchor)
