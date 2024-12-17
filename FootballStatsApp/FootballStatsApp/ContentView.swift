@@ -39,10 +39,13 @@ struct ContentView: View {
                             )
                             .foregroundColor(Color.white)
                             .padding()
+                            .accessibilityLabel("3")
+                            .accessibilityHint("Home Team Score")
                         Rectangle()
                             .foregroundStyle(Color.white)
                             .frame(width: 32, height: 14)
                             .padding()
+                            .accessibilityHidden(true)
                         Text("3")
                             .font(
                                 .system(
@@ -50,6 +53,8 @@ struct ContentView: View {
                             )
                             .foregroundColor(Color.white)
                             .padding()
+                            .accessibilityLabel("3")
+                            .accessibilityHint("Away Team Score")
                         Spacer()
                     }
                     HStack {
@@ -58,6 +63,8 @@ struct ContentView: View {
                             Image("LiverpoolNS")
                             Text("Liverpool")
                                 .font(.headline)
+                                .accessibilityLabel("Liverpool, Home")
+                                .accessibilityHint("Home Team")
                         }
                         .padding(.top, 50.0)
                         Spacer()
@@ -66,6 +73,8 @@ struct ContentView: View {
                             Image("TottenhamNS")
                             Text("Tottenham")
                                 .font(.headline)
+                                .accessibilityLabel("Tottenham, Away")
+                                .accessibilityHint("Away Team")
                         }
                         .padding(.top, 50.0)
                         Spacer()
@@ -78,6 +87,8 @@ struct ContentView: View {
                         ) {
                             selectedMenu = .lineups
                         }
+                        .accessibilityLabel("Lineups")
+                        .accessibilityHint("Click this button to have access to Lineups")
 
                         MenuButton(
                             title: MenuItem.heatMaps.rawValue,
@@ -85,6 +96,8 @@ struct ContentView: View {
                         ) {
                             selectedMenu = .heatMaps
                         }
+                        .accessibilityLabel("Heat maps")
+                        .accessibilityHint("Click this button to have access to Heat Maps")
 
                         MenuButton(
                             title: MenuItem.shots.rawValue,
@@ -92,6 +105,8 @@ struct ContentView: View {
                         ) {
                             selectedMenu = .shots
                         }
+                        .accessibilityLabel("Shots")
+                        .accessibilityHint("Click this button to have access to Shot statistics")
                     }
                     .padding(.top, 20)
                     .padding(.bottom, 10)
