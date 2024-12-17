@@ -14,7 +14,7 @@ struct ARViewContainer: View {
 
     var body: some View {
         ZStack {
-            // Assicurati che ARViewRepresentable sia accessibile
+            // Passa il binding a 'isModelPlaced' al costruttore di ARViewRepresentable
             ARViewRepresentable(isModelPlaced: $isModelPlaced)
                 .edgesIgnoringSafeArea(.all)
 

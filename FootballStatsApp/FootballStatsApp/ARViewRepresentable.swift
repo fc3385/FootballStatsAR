@@ -11,8 +11,9 @@ import ARKit
 
 struct ARViewRepresentable: UIViewRepresentable {
     @Binding var isModelPlaced: Bool // Stato per controllare se il modello è stato posizionato
+    private var modelEntity: Entity?
 
-    // Assicurati che il costruttore sia accessibile
+    // Modifica il costruttore rendendolo pubblico
     public init(isModelPlaced: Binding<Bool>) {
         self._isModelPlaced = isModelPlaced
     }
@@ -25,7 +26,7 @@ struct ARViewRepresentable: UIViewRepresentable {
         let tapGesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleTap))
         arView.addGestureRecognizer(tapGesture)
 
-        // Gesti di drag (trascinamento) e pinch (scalamento)
+        // Gesti di pan (trascinamento) e pinch (scalamento)
         let panGesture = UIPanGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handlePan))
         arView.addGestureRecognizer(panGesture)
 
@@ -63,7 +64,7 @@ struct ARViewRepresentable: UIViewRepresentable {
                 let position = simd_make_float3(result.worldTransform.columns.3)
 
                 // Carica il modello
-                if let model = try? Entity.load(named: "Scene") {
+                if let model = try? Entity.load(named: "Experience") {
                     // Crea un ancoraggio e posiziona il modello
                     let anchor = AnchorEntity(world: position)
                     anchor.addChild(model)
@@ -73,7 +74,7 @@ struct ARViewRepresentable: UIViewRepresentable {
                     self.modelEntity = model
                     isModelPlaced.wrappedValue = true
                 } else {
-                    print("Errore: Impossibile caricare il modello 'Scene'")
+                    print("Errore: Impossibile caricare il modello 'Experience'")
                 }
             } else {
                 print("Nessuna superficie valida trovata.")
@@ -84,9 +85,12 @@ struct ARViewRepresentable: UIViewRepresentable {
         @objc func handlePan(recognizer: UIPanGestureRecognizer) {
             guard let arView = arView, let modelEntity = modelEntity else { return }
 
-            let translation = recognizer.translation(in: arView)
+            let touchLocation = recognizer.location(in: arView)
+            
             if recognizer.state == .changed {
-                let raycastResult = arView.raycast(from: arView.center, allowing: .existingPlaneGeometry, alignment: .horizontal)
+                // Esegui un raycast per determinare dove si trova la superficie
+                let raycastResult = arView.raycast(from: touchLocation, allowing: .existingPlaneGeometry, alignment: .horizontal)
+                
                 if let hitTest = raycastResult.first {
                     // Ottieni la nuova posizione e sposta il modello
                     let newPosition = simd_make_float3(hitTest.worldTransform.columns.3)
