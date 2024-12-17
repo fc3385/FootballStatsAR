@@ -6,8 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		478DA3F82D10438200ED3CCF /* ContentViewBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478DA3F72D10438200ED3CCF /* ContentViewBackup.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		478DA3782D1024C100ED3CCF /* FootballStatsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FootballStatsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		478DA3F72D10438200ED3CCF /* ContentViewBackup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewBackup.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -32,6 +37,7 @@
 		478DA36F2D1024C100ED3CCF = {
 			isa = PBXGroup;
 			children = (
+				478DA3F72D10438200ED3CCF /* ContentViewBackup.swift */,
 				478DA37A2D1024C100ED3CCF /* FootballStatsApp */,
 				478DA3792D1024C100ED3CCF /* Products */,
 			);
@@ -119,6 +125,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				478DA3F82D10438200ED3CCF /* ContentViewBackup.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
