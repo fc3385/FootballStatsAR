@@ -18,69 +18,78 @@ struct ContentView: View {
 
     @State private var selectedMenu: MenuItem = .heatMaps
     @State private var selectedTeam = "Liverpool"
-    
-    
+
     var players: [Player] {
-        selectedTeam == "Liverpool" ? TeamPlayers.liverpoolPlayers : TeamPlayers.tottenhamPlayers
+        selectedTeam == "Liverpool"
+            ? TeamPlayers.liverpoolPlayers : TeamPlayers.tottenhamPlayers
     }
 
     var body: some View {
-        VStack {
-            ZStack {
-                Rectangle()
-                    .foregroundStyle(Color.accentColor)
-                HStack {
-                    Spacer()
-                    Text("3")
-                        .font(
-                            .system(size: 175, weight: .bold, design: .default)
-                        )
-                        .foregroundColor(Color.white)
-                        .padding()
+        NavigationView {
+            VStack {
+                ZStack {
                     Rectangle()
-                        .foregroundStyle(Color.white)
-                        .frame(width: 32, height: 14)
-                        .padding()
-                    Text("3")
-                        .font(
-                            .system(size: 175, weight: .bold, design: .default)
-                        )
-                        .foregroundColor(Color.white)
-                        .padding()
-                    Spacer()
-                }
-                HStack {
-                    Spacer()
-                    VStack {
-                        Image("LiverpoolNS")
-                        Text("Liverpool")
-                            .font(.headline)
+                        .foregroundStyle(Color.accentColor)
+                    HStack {
+                        Spacer()
+                        Text("3")
+                            .font(
+                                .system(
+                                    size: 175, weight: .bold, design: .default)
+                            )
+                            .foregroundColor(Color.white)
+                            .padding()
+                        Rectangle()
+                            .foregroundStyle(Color.white)
+                            .frame(width: 32, height: 14)
+                            .padding()
+                        Text("3")
+                            .font(
+                                .system(
+                                    size: 175, weight: .bold, design: .default)
+                            )
+                            .foregroundColor(Color.white)
+                            .padding()
+                        Spacer()
                     }
-                    .padding(.top, 50.0)
-                    Spacer()
-                        .frame(minWidth: 0, maxWidth: 50)
-                    VStack {
-                        Image("TottenhamNS")
-                        Text("Tottenham")
-                            .font(.headline)
+                    HStack {
+                        Spacer()
+                        VStack {
+                            Image("LiverpoolNS")
+                            Text("Liverpool")
+                                .font(.headline)
+                        }
+                        .padding(.top, 50.0)
+                        Spacer()
+                            .frame(minWidth: 0, maxWidth: 50)
+                        VStack {
+                            Image("TottenhamNS")
+                            Text("Tottenham")
+                                .font(.headline)
+                        }
+                        .padding(.top, 50.0)
+                        Spacer()
                     }
-                    .padding(.top, 50.0)
-                    Spacer()
-                }
 
-                HStack(spacing: 30) {
-                        MenuButton(title: MenuItem.lineups.rawValue,
-                                   isSelected: selectedMenu == .lineups) {
+                    HStack(spacing: 30) {
+                        MenuButton(
+                            title: MenuItem.lineups.rawValue,
+                            isSelected: selectedMenu == .lineups
+                        ) {
                             selectedMenu = .lineups
                         }
-                        
-                        MenuButton(title: MenuItem.heatMaps.rawValue,
-                                   isSelected: selectedMenu == .heatMaps) {
+
+                        MenuButton(
+                            title: MenuItem.heatMaps.rawValue,
+                            isSelected: selectedMenu == .heatMaps
+                        ) {
                             selectedMenu = .heatMaps
                         }
-                        
-                        MenuButton(title: MenuItem.shots.rawValue,
-                                   isSelected: selectedMenu == .shots) {
+
+                        MenuButton(
+                            title: MenuItem.shots.rawValue,
+                            isSelected: selectedMenu == .shots
+                        ) {
                             selectedMenu = .shots
                         }
                     }
@@ -88,22 +97,37 @@ struct ContentView: View {
                     .padding(.bottom, 10)
                     .frame(maxHeight: .infinity, alignment: .bottom)
 
-            }
-            .frame(height: 320)
-            VStack(spacing: 10) {
-                Picker("Seleziona la squadra", selection: $selectedTeam) {
-                    Text("Liverpool").tag("Liverpool")
-                    Text("Tottenham").tag("Tottenham")
                 }
-                .pickerStyle(SegmentedPickerStyle())
-                .padding(.horizontal)
-                
-                PlayerCarousel(players: players)
-            }
-            .padding(.top, 10)
-            
-            Spacer()
+                .ignoresSafeArea()
+                .frame(height: 280)
+                VStack(spacing: 10) {
+                    Picker("Seleziona la squadra", selection: $selectedTeam) {
+                        Text("Liverpool").tag("Liverpool")
+                        Text("Tottenham").tag("Tottenham")
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .padding(.horizontal)
 
+                    PlayerCarousel(players: players)
+                }
+                .padding(.top, 10)
+
+                Image("heatmap")
+                    .resizable()
+                    .rotationEffect(.degrees(90))
+                    .scaledToFit()
+                    .frame(maxWidth: .infinity)
+
+                NavigationLink(destination: ARViewContainer()) {
+                    Text("View in AR")
+                        .font(.title2)
+                        .padding()
+                        .padding(.horizontal)
+                        .background(Color.accentColor)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+            }
         }
         .ignoresSafeArea()
     }
