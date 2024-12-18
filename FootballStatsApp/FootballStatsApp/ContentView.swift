@@ -61,6 +61,7 @@ struct ContentView: View {
                         Spacer()
                         VStack {
                             Image("LiverpoolNS")
+                                .accessibilityHidden(true)
                             Text("Liverpool")
                                 .font(.headline)
                                 .accessibilityLabel("Liverpool, Home")
@@ -71,6 +72,7 @@ struct ContentView: View {
                             .frame(minWidth: 0, maxWidth: 50)
                         VStack {
                             Image("TottenhamNS")
+                                .accessibilityHidden(true)
                             Text("Tottenham")
                                 .font(.headline)
                                 .accessibilityLabel("Tottenham, Away")
@@ -115,7 +117,7 @@ struct ContentView: View {
                 }
                 .ignoresSafeArea()
                 .frame(height: 280)
-                VStack(spacing: 10) {
+                VStack(spacing: 15) {
                     Picker("Seleziona la squadra", selection: $selectedTeam) {
                         Text("Liverpool").tag("Liverpool")
                         Text("Tottenham").tag("Tottenham")
@@ -132,9 +134,10 @@ struct ContentView: View {
                     .rotationEffect(.degrees(90))
                     .scaledToFit()
                     .frame(maxWidth: .infinity)
+                    .accessibilityLabel("Selected player Heatmap")
 
                 NavigationLink(destination: ARViewContainer()) {
-                    Text("View in AR")
+                    Text("View in AR       ")
                         .font(.title2)
                         .padding()
                         .padding(.horizontal)
@@ -142,6 +145,10 @@ struct ContentView: View {
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
+                .accessibilityLabel("View in AR")
+                .accessibilityHint("Click twice to open AR View")
+                
+                Spacer()
             }
         }
         .ignoresSafeArea()
