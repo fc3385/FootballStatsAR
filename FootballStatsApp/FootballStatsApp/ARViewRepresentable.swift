@@ -31,6 +31,9 @@ struct ARViewRepresentable: UIViewRepresentable {
         let pinchGesture = UIPinchGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handlePinch))
         arView.addGestureRecognizer(pinchGesture)
 
+        let rotationGesture = UIRotationGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleRotation))
+        arView.addGestureRecognizer(rotationGesture)
+
         context.coordinator.arView = arView
         context.coordinator.isModelPlaced = $isModelPlaced
 
@@ -50,33 +53,46 @@ struct ARViewRepresentable: UIViewRepresentable {
         var isModelPlaced: Binding<Bool>?
         var modelEntity: Entity?
 
-        // Variabili per memorizzare stato corrente di posizione e scala
+        // Variabili per memorizzare stato corrente di posizione, scala e rotazione
         private var currentPosition: SIMD3<Float>?
         private var currentScale: SIMD3<Float> = SIMD3<Float>(1, 1, 1)
+        private var currentRotation: simd_quatf = simd_quatf(angle: 0, axis: [0, 1, 0])
 
         @objc func handleTap(recognizer: UITapGestureRecognizer) {
-            guard let arView = arView, let isModelPlaced = isModelPlaced, !isModelPlaced.wrappedValue else { return }
-
+            guard let arView = arView else { return }
             let touchLocation = recognizer.location(in: arView)
 
-            if let result = arView.raycast(from: touchLocation, allowing: .existingPlaneGeometry, alignment: .horizontal).first {
-                let position = simd_make_float3(result.worldTransform.columns.3)
-
-                if let model = try? Entity.load(named: "Scene") {
-                    let anchor = AnchorEntity(world: position)
-                    anchor.addChild(model)
-                    arView.scene.anchors.append(anchor)
-
-                    // Memorizza il modello e la posizione iniziale
-                    self.modelEntity = model
-                    self.currentPosition = position
-                    self.currentScale = SIMD3<Float>(1, 1, 1)
-                    isModelPlaced.wrappedValue = true
-                } else {
-                    print("Errore: Impossibile caricare il modello 'Scene'")
+            // Verifica se esiste già un modello
+            if let isModelPlaced = isModelPlaced, isModelPlaced.wrappedValue {
+                if let result = arView.raycast(from: touchLocation, allowing: .existingPlaneGeometry, alignment: .horizontal).first,
+                   let modelEntity = modelEntity {
+                    // Aggiorna la posizione del modello esistente
+                    let newPosition = simd_make_float3(result.worldTransform.columns.3)
+                    modelEntity.position = newPosition
+                    self.currentPosition = newPosition // Salva la nuova posizione
                 }
             } else {
-                print("Nessuna superficie valida trovata.")
+                // Posizionamento iniziale del modello
+                if let result = arView.raycast(from: touchLocation, allowing: .existingPlaneGeometry, alignment: .horizontal).first {
+                    let position = simd_make_float3(result.worldTransform.columns.3)
+
+                    if let model = try? Entity.load(named: "Scene") {
+                        let anchor = AnchorEntity(world: position)
+                        anchor.addChild(model)
+                        arView.scene.anchors.append(anchor)
+
+                        // Memorizza il modello e lo stato iniziale
+                        self.modelEntity = model
+                        self.currentPosition = position
+                        self.currentScale = SIMD3<Float>(1, 1, 1)
+                        self.currentRotation = simd_quatf(angle: 0, axis: [0, 1, 0])
+                        isModelPlaced?.wrappedValue = true
+                    } else {
+                        print("Errore: Impossibile caricare il modello 'Scene'")
+                    }
+                } else {
+                    print("Nessuna superficie valida trovata.")
+                }
             }
         }
 
@@ -115,6 +131,24 @@ struct ARViewRepresentable: UIViewRepresentable {
                 recognizer.scale = 1.0
             }
         }
+
+        @objc func handleRotation(recognizer: UIRotationGestureRecognizer) {
+            guard let modelEntity = modelEntity else { return }
+
+            if recognizer.state == .changed {
+                // Calcola il nuovo angolo di rotazione
+                let angle = Float(recognizer.rotation)
+                let rotationDelta = simd_quatf(angle: angle, axis: [0, 1, 0])
+
+                // Aggiorna la rotazione attuale del modello
+                let newRotation = rotationDelta * currentRotation
+                modelEntity.orientation = newRotation
+                self.currentRotation = newRotation // Salva la nuova rotazione
+
+                // Resetta il gesto per rotazioni incrementali
+                recognizer.rotation = 0
+            }
+        }
     }
 }
 
@@ -125,3 +159,5 @@ extension ARView {
         session.run(configuration)
     }
 }
+
+

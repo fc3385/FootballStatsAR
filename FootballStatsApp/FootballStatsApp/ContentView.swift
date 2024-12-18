@@ -16,7 +16,7 @@ struct ContentView: View {
         case shots = "Shots"
     }
 
-    @State private var selectedMenu: MenuItem = .heatMaps
+    @State private var selectedMenu: MenuItem = .shots
     @State private var selectedTeam = "Liverpool"
 
     var players: [Player] {
@@ -129,11 +129,10 @@ struct ContentView: View {
                 }
                 .padding(.top, 10)
 
-                Image("heatmap")
+                Image("shots")
                     .resizable()
-                    .rotationEffect(.degrees(90))
-                    .scaledToFit()
-                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
+                    .frame(width: 320, height: 320)
                     .accessibilityLabel("Selected player Heatmap")
 
                 NavigationLink(destination: ARViewContainer()) {
